@@ -1,4 +1,4 @@
-num=int(input("Введіте 5-значне число: "))
+num=int(input("Введіть 5-значне число: "))
 digit1=num//10000
 digit2=(num//1000)%10
 digit3=(num//100)%10
