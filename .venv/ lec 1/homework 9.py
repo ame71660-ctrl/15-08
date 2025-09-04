@@ -18,8 +18,8 @@ while True:
     print("Результат",result)
 
     cont =input("Бажаєте продовжити? (yes/y or not/n): "). lower()
-    if  cont not in ("yes", "y", "no", "n"):
-        print("Какулятор завершено ")
+    if  cont not in ("yes", "y"):
+        print("Калькулятор завершено ")
         break
 
 
