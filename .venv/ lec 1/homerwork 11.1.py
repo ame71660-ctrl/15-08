@@ -1,4 +1,4 @@
-seconds_input=int(input('Введіть кількість секунд ( від 0 до 8640000: ' ))
+seconds_input=int(input('Введіть кількість секунд ( від 0 до 8640000): ' ))
 days,remainder=divmod(seconds_input,24*60*60)
 hours,remainder=divmod(remainder,60*60)
 minutes,seconds=divmod(remainder,60)
