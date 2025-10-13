@@ -3,9 +3,10 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
-      <excludeFolder url="file://$MODULE_DIR$/.venv1" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.11 (Hillel IT)" jdkType="Python SDK" />
+    <content url="file://$MODULE_DIR$/.venv/homework" />
+    <content url="file://$MODULE_DIR$/.venv/lec1" />
+    <orderEntry type="jdk" jdkName="Python 3.11 virtualenv at C:\Users\User\Desktop\Hillel IT\.venv" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="PyCharmMiscProject" />
   </component>
