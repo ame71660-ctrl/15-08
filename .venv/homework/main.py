@@ -10,6 +10,6 @@ print(gr)
 
 assert gr.find_student('Jobs') == st1
 assert gr.find_student('Jobs2') is None
-assert isinstance(gr.find_student('Jobs'), Student), 'Метод пошуку повинен повертати об’єкт Student'
+assert isinstance(gr.find_student('Jobs'), Student)
 gr.delete_student('Taylor')
 print(gr)
