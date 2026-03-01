@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="page-wrapper d-flex flex-column min-vh-100" style="background-color: #121212; color: #ffffff;">
+
+    <div class="container-fluid flex-grow-1 p-4">
+
+        <h2 class="text-center mb-5 fw-bold">👤 Profile Settings</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert
+                            {% if message.tags == 'error' %}alert-danger
+                            {% else %}alert-success{% endif %} text-center rounded-3 shadow-sm mb-4">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="row g-4 justify-content-center">
+
+            <!-- English Level -->
+            <div class="col-md-10">
+                <div class="card shadow p-4 rounded-4 mb-4 level-card">
+                    <h4>Your English Level</h4>
+                    <h1 class="display-4 fw-bold">{{ level }}</h1>
+                    <p>Completed lessons: {{ completed_lessons }}</p>
+                    <div class="progress mt-3" style="height: 20px;">
+                        <div class="progress-bar" role="progressbar" style="width: {{ progress }}%;" aria-valuenow="{{ progress }}" aria-valuemin="0" aria-valuemax="100">
+                            {{ progress }}%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Profile -->
+            <div class="col-md-5">
+                <div class="card p-4 shadow rounded-4">
+                    <h5 class="mb-3">Edit Profile</h5>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button name="update_profile" class="btn btn-primary rounded-3">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Change Password -->
+            <div class="col-md-5">
+                <div class="card p-4 shadow rounded-4">
+                    <h5 class="mb-3">Change Password</h5>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ password_form.as_p }}
+                        <button name="change_password" class="btn btn-warning rounded-3">Update Password</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Change Language -->
+            <div class="col-md-5">
+                <div class="card p-4 shadow rounded-4">
+                    <h5 class="mb-3">Language</h5>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ language_form.as_p }}
+                        <button name="change_language" class="btn btn-info rounded-3">Change Language</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Delete Account -->
+            <div class="col-md-5">
+                <div class="card p-4 shadow rounded-4 text-center">
+                    <h5 class="mb-3 text-danger">Danger Zone</h5>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button name="delete_account" class="btn btn-danger rounded-3">Delete Account</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<style>
+/* Общие стили */
+.card {
+    background-color: #1a1a1a; /* темный фон карточек */
+    color: #f9fafb;
+    border: none;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+.level-card {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: white;
+}
+
+input.form-control, select.form-select, button {
+    height: 50px;
+    font-size: 1rem;
+    background-color: #111827;
+    color: #f9fafb;
+    border: 1px solid #374151;
+}
+
+input.form-control:focus, select.form-select:focus {
+    box-shadow: none;
+    border-color: #3b82f6;
+}
+
+.btn-primary { background-color: #3b82f6; border: none; }
+.btn-primary:hover { background-color: #2563eb; }
+
+.btn-warning { background-color: #f59e0b; border: none; }
+.btn-warning:hover { background-color: #b45309; }
+
+.btn-info { background-color: #0ea5e9; border: none; }
+.btn-info:hover { background-color: #0284c7; }
+
+.btn-danger { background-color: #ef4444; border: none; }
+.btn-danger:hover { background-color: #b91c1c; }
+
+.progress {
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+.progress-bar {
+    background: #facc15;
+    color: black;
+    font-weight: bold;
+}
+
+/* Страница занимает всю высоту */
+.page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.flex-grow-1 { flex-grow: 1; }
+
+/* Адаптивность */
+@media (max-width: 992px) {
+    form input, form select, form button { flex: 1 1 48%; margin-bottom: 10px; }
+}
+@media (max-width: 576px) {
+    form input, form select, form button { flex: 1 1 100%; margin-bottom: 10px; }
+}
+</style>
+{% endblock %}

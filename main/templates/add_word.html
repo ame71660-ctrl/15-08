@@ -1,0 +1,23 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Word</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+<div class="form-container">
+    <h2>Add New Word</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="english" placeholder="English" required>
+        <input type="text" name="russian" placeholder="Russian" required>
+        <input type="text" name="transcription" placeholder="Transcription">
+        <button type="submit">Add Word</button>
+    </form>
+    <a href="{% url 'vocabulary' %}">Back to Vocabulary</a>
+</div>
+</body>
+</html>

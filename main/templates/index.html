@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>English Learning</title>
+<style>
+body { margin:0; font-family:'Segoe UI', sans-serif; background:#0f172a; color:#e0e0e0; }
+.navbar { position:fixed; top:0; left:0; right:0; background:#1e293b; padding:15px 30px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 4px 15px rgba(0,0,0,0.7); z-index:1000; }
+.navbar .logo { font-weight:bold; font-size:24px; color:#facc15; }
+.navbar a { color:#e0e0e0; text-decoration:none; margin-left:15px; cursor:pointer; }
+.container { width:100%; max-width:1200px; margin:0 auto; padding:100px 20px 40px 20px; }
+section { margin-bottom:60px; }
+h2 { font-size:28px; margin-bottom:20px; color:#facc15; }
+
+form { width:100%; max-width:900px; margin:0 auto 40px auto; display:flex; flex-wrap:wrap; gap:15px; background:#1e293b; padding:20px; border-radius:15px; box-shadow:0 8px 25px rgba(0,0,0,0.5); }
+form input, form select, form button { flex:1 1 200px; padding:12px 15px; border-radius:10px; border:1px solid #334155; font-size:16px; }
+form input, form select { background:#0f172a; color:#e0e0e0; }
+form button { background:#facc15; color:#0f172a; cursor:pointer; font-weight:bold; transition:0.3s; }
+form button:hover { background:#eab308; }
+
+table { width:100%; border-collapse:collapse; font-size:16px; box-shadow:0 8px 25px rgba(0,0,0,0.5); border-radius:15px; overflow:hidden; }
+th,td { padding:12px 20px; text-align:left; }
+th { background:#1e293b; font-weight:600; color:#facc15; }
+td { background:#0f172a; color:#e0e0e0; transition:0.3s; }
+td:hover { background:#334155; cursor:pointer; }
+
+.footer-clock { background:#1e293b; text-align:center; padding:15px 0; font-family:'Courier New', monospace; font-size:20px; color:#facc15; box-shadow:0 -2px 8px rgba(0,0,0,0.5); margin-top:40px; letter-spacing:2px; }
+
+/* Карточки уроков */
+.lesson-card { background:linear-gradient(135deg,#667eea,#764ba2); color:white; padding:20px; border-radius:15px; box-shadow:0 6px 18px rgba(0,0,0,0.15); transition:transform 0.3s,box-shadow 0.3s; margin-bottom:20px; }
+.lesson-card:hover { transform:translateY(-5px); box-shadow:0 10px 25px rgba(0,0,0,0.25); }
+.lesson-card h3 { margin-bottom:10px; font-size:1.3rem; }
+.lesson-card p { margin:5px 0; font-size:0.95rem; }
+</style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">English Learning</div>
+    <div>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#lessons">Lessons</a>
+        <a href="#calendar">Calendar</a>
+    </div>
+</div>
+
+<div class="container">
+
+<section id="dashboard">
+    <h2>Dashboard</h2>
+    <p id="next-lesson-dashboard">No upcoming lessons.</p>
+</section>
+
+<section id="lessons">
+    <h2>Lessons</h2>
+    <table>
+        <thead>
+            <tr><th>Title</th><th>Date</th><th>Time</th></tr>
+        </thead>
+        <tbody id="lessons-table">
+            <tr><td colspan="3">--:--</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section id="calendar">
+    <h2>📅 Add Lesson</h2>
+    <form id="calendar-form">
+        <input type="text" placeholder="Lesson title" required>
+        <input type="date" required min="{{ today_date }}">
+        <input type="time" required>
+        <button type="submit">Add Lesson</button>
+    </form>
+</section>
+
+<!-- Карточки уроков -->
+<div id="lesson-cards-container"></div>
+
+</div>
+
+<div class="footer-clock" id="footer-clock">00 : 00 : 00 | </div>
+
+<script>
+// Часы
+function updateClock() {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    document.getElementById('footer-clock').textContent = `${h} : ${m} : ${s} |`;
+}
+setInterval(updateClock,1000);
+updateClock();
+
+// Уроки
+const lessons = [];
+
+// Таблица
+function renderLessonsTable() {
+    const tbody = document.getElementById('lessons-table');
+    tbody.innerHTML = '';
+    if (lessons.length===0) { tbody.innerHTML='<tr><td colspan="3">--:--</td></tr>'; return; }
+    lessons.sort((a,b)=>new Date(a.date+'T'+a.time)-new Date(b.date+'T'+b.time));
+    lessons.forEach(l=>{
+        const tr=document.createElement('tr');
+        tr.innerHTML=`<td>${l.title}</td><td>${l.date}</td><td>${l.time}</td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+// Dashboard
+function updateNextLessonDashboard() {
+    if(lessons.length===0){ document.getElementById('next-lesson-dashboard').textContent='No upcoming lessons.'; return; }
+    const now=new Date();
+    const future=lessons.filter(l=>new Date(l.date+'T'+l.time)>now);
+    if(future.length===0){ document.getElementById('next-lesson-dashboard').textContent='No upcoming lessons.'; return; }
+    future.sort((a,b)=>new Date(a.date+'T'+a.time)-new Date(b.date+'T'+b.time));
+    const next=future[0];
+    document.getElementById('next-lesson-dashboard').textContent=`Next lesson: ${next.title} at ${next.date} ${next.time}`;
+}
+
+// Добавление нового урока
+document.getElementById('calendar-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    const title=this.querySelector('input[type="text"]').value;
+    const date=this.querySelector('input[type="date"]').value;
+    const time=this.querySelector('input[type="time"]').value;
+    lessons.push({title,date,time});
+    this.reset();
+    renderLessonsTable();
+    updateNextLessonDashboard();
+});
+</script>
+
+</body>
+</html>
+
+

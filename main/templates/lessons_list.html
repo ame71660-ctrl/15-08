@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block title %}My Lessons{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-5 px-4">
+
+    <h2 class="text-center mb-5 fw-bold">📚 My Lessons</h2>
+
+    <!-- Вывод ошибок -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger text-center rounded-3 shadow-sm">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Форма добавления урока -->
+    <div class="card shadow p-4 mb-5 border-0 rounded-4">
+        <form method="POST" class="row g-3 align-items-center">
+            {% csrf_token %}
+
+            <div class="col-md-3">
+                <input type="text"
+                       name="title"
+                       class="form-control form-control-lg"
+                       placeholder="Lesson Title"
+                       required>
+            </div>
+
+            <div class="col-md-2">
+                <input type="date"
+                       name="date"
+                       class="form-control form-control-lg"
+                       value="{{ today_date }}"
+                       min="{{ today_date }}"
+                       required>
+            </div>
+
+            <div class="col-md-2">
+                <input type="time"
+                       name="time"
+                       class="form-control form-control-lg"
+                       required>
+            </div>
+
+            <div class="col-md-3">
+                <select name="topic" class="form-select form-select-lg">
+                    {% for topic in topics %}
+                        <option value="{{ topic }}">{{ topic }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-primary btn-lg rounded-3">
+                    Add Lesson
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Список уроков -->
+    <div class="row g-4">
+        {% for lesson in lessons %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+                <div class="card lesson-card h-100 shadow border-0 rounded-4
+                    {% if lesson.done %}done{% else %}bg-{{ lesson.topic|lower }}{% endif %}">
+
+                    <div class="card-body d-flex flex-column">
+
+                        <h5 class="card-title fw-semibold">
+                            {{ lesson.title }}
+                        </h5>
+
+                        <p class="card-text mb-4">
+                            📅 {{ lesson.date }} <br>
+                            ⏰ {{ lesson.time }} <br>
+                            📝 {{ lesson.topic }}
+                        </p>
+
+                        <div class="mt-auto d-flex justify-content-between">
+
+                            <a href="{% url 'edit_lesson' lesson.id %}"
+                               class="btn btn-sm btn-outline-primary rounded-3">
+                                Edit
+                            </a>
+
+                            <a href="{% url 'delete_lesson' lesson.id %}"
+                               class="btn btn-sm btn-outline-danger rounded-3">
+                                Delete
+                            </a>
+
+                            {% if not lesson.done %}
+                                <a href="{% url 'mark_done' lesson.id %}"
+                                   class="btn btn-sm btn-success rounded-3">
+                                    Done
+                                </a>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-center fs-5">No lessons yet.</p>
+        {% endfor %}
+    </div>
+
+</div>
+
+<style>
+.container-fluid {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc, #eef2ff);
+}
+
+.lesson-card {
+    transition: all 0.25s ease;
+}
+
+.lesson-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+
+.done {
+    background-color: #f1f5f9 !important;
+    color: #6c757d !important;
+    text-decoration: line-through;
+}
+
+/* Цвета тем */
+.bg-grammar { background-color: #FFEDD5 !important; }
+.bg-vocabulary { background-color: #D1FAE5 !important; }
+.bg-reading { background-color: #E0E7FF !important; }
+
+.card-text {
+    line-height: 1.5;
+}
+</style>
+
+{% endblock %}

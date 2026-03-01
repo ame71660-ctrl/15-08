@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>English Learning SPA</title>
+<style>
+body {
+  margin:0;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color:white;
+  background:linear-gradient(135deg,#1e40af,#3b82f6);
+  min-height:100vh;
+}
+
+/* Navbar */
+.navbar {
+  background:#1e3a8a;
+  padding:15px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.5);
+}
+.navbar .logo {
+  font-weight:bold;
+  font-size:24px;
+}
+.navbar a {
+  color:white;
+  text-decoration:none;
+  margin-left:15px;
+  padding:8px 12px;
+  border-radius:8px;
+  transition:0.3s;
+  cursor:pointer;
+}
+.navbar a:hover { background: rgba(255,255,255,0.2); }
+.navbar a.active { background: rgba(255,255,255,0.3); }
+
+/* Pages */
+.page {
+  display:none;
+  padding:40px;
+  flex:1;
+  justify-content:center;
+}
+.page.active { display:flex; }
+
+.card {
+  background: #2563eb;
+  padding:30px 35px;
+  border-radius:20px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.3);
+  width:100%;
+  max-width:700px;
+  text-align:center;
+}
+.card h2 { margin-bottom:20px; }
+
+/* Inputs and buttons */
+.card input {
+  margin:5px; padding:8px; border-radius:8px; border:none; background:#1e40af; color:white;
+}
+.card button.add {
+  padding:10px 20px; margin:10px 0; border-radius:12px; border:none;
+  background:#1e3a8a; color:white; font-weight:600; cursor:pointer; transition:0.3s;
+}
+.card button.add:hover { background:#1d4ed8; }
+
+/* Tables */
+.card table { width:100%; border-collapse:collapse; margin-top:15px; }
+.card th, .card td { border:1px solid rgba(255,255,255,0.3); padding:12px 15px; text-align:left; }
+.card th { background:#1e3a8a; font-weight:600; }
+.card td { background:#1e40af; }
+
+/* Footer clock */
+.footer-clock {
+  background:#1e3a8a;
+  text-align:center;
+  padding:15px 0;
+  font-family:'Courier New', monospace;
+  font-size:20px;
+  box-shadow:0 -2px 8px rgba(0,0,0,0.3);
+}
+</style>
+</head>
+<body>
+
+<div class="navbar">
+  <div class="logo">English Learning</div>
+  <div>
+    <a class="nav-link active" data-page="dashboard">Dashboard</a>
+    <a class="nav-link" data-page="lessons">Lessons</a>
+    <a class="nav-link" data-page="vocabulary">Vocabulary</a>
+    <a class="nav-link" data-page="calendar">Calendar</a>
+    <a class="nav-link" data-page="profile">Profile</a>
+  </div>
+</div>
+
+<!-- Pages -->
+<div id="dashboard" class="page active">
+  <div class="card"><h2>Welcome to Dashboard!</h2></div>
+</div>
+
+<div id="lessons" class="page">
+  <div class="card">
+    <h2>📘 My Lessons</h2>
+    <input type="text" id="lessonTitle" placeholder="Lesson Title">
+    <input type="date" id="lessonDate">
+    <input type="time" id="lessonTime">
+    <button class="add" id="addLessonBtn">Add Lesson</button>
+    <table>
+      <thead><tr><th>Title</th><th>Date</th><th>Time</th></tr></thead>
+      <tbody id="lessonsTableBody"><tr><td colspan="3">No lessons yet</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="vocabulary" class="page">
+  <div class="card">
+    <h2>📘 My Vocabulary</h2>
+    <input type="text" id="english" placeholder="English word">
+    <input type="text" id="russian" placeholder="Russian translation">
+    <input type="text" id="transcription" placeholder="Transcription">
+    <button class="add" id="addWordBtn">+ Add Word</button>
+    <table>
+      <thead><tr><th>English</th><th>Russian</th><th>Transcription</th></tr></thead>
+      <tbody id="vocabTableBody"><tr><td>hello</td><td>привет</td><td>hell</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="calendar" class="page">
+  <div class="card">
+    <h2>📅 Calendar</h2>
+    <p>Select lessons in Lessons tab to schedule or view them here.</p>
+  </div>
+</div>
+
+<div id="profile" class="page">
+  <div class="card"><h2>Profile Page</h2></div>
+</div>
+
+<div class="footer-clock" id="footer-clock">00 : 00 : 00 | Loading...</div>
+
+<script>
+// Навигация с подсветкой кнопки
+const links = document.querySelectorAll('.nav-link');
+links.forEach(link => {
+  link.addEventListener('click', () => {
+    const pageId = link.dataset.page;
+
+    // Показать нужную страницу
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+
+    // Подсветка активной кнопки
+    links.forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+// Часы
+function updateClock(){
+  const now = new Date();
+  const h=String(now.getHours()).padStart(2,'0');
+  const m=String(now.getMinutes()).padStart(2,'0');
+  const s=String(now.getSeconds()).padStart(2,'0');
+  const d=now.toDateString();
+  document.getElementById('footer-clock').textContent = `${h}:${m}:${s} | ${d}`;
+}
+setInterval(updateClock,1000);
+updateClock();
+
+// Добавление уроков
+document.getElementById('addLessonBtn').addEventListener('click', ()=>{
+  const title = document.getElementById('lessonTitle').value.trim();
+  const date = document.getElementById('lessonDate').value;
+  const time = document.getElementById('lessonTime').value;
+  if(title && date && time){
+    const tbody = document.getElementById('lessonsTableBody');
+    if(tbody.children.length===1 && tbody.children[0].children[0].colSpan===3) tbody.innerHTML='';
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${title}</td><td>${date}</td><td>${time}</td>`;
+    tbody.appendChild(row);
+    document.getElementById('lessonTitle').value='';
+    document.getElementById('lessonDate').value='';
+    document.getElementById('lessonTime').value='';
+  }else alert("Fill all fields!");
+});
+
+// Добавление слов
+document.getElementById('addWordBtn').addEventListener('click', ()=>{
+  const eng=document.getElementById('english').value.trim();
+  const rus=document.getElementById('russian').value.trim();
+  const trans=document.getElementById('transcription').value.trim();
+  if(eng && rus && trans){
+    const tbody = document.getElementById('vocabTableBody');
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${eng}</td><td>${rus}</td><td>${trans}</td>`;
+    tbody.appendChild(row);
+    document.getElementById('english').value='';
+    document.getElementById('russian').value='';
+    document.getElementById('transcription').value='';
+  }else alert("Fill all fields!");
+});
+</script>
+
+</body>
+</html>

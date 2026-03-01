@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>English Learning</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">English Learning</div>
+
+    <ul class="nav-links">
+        <li>
+            <a href="{% url 'dashboard' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+               Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'lessons' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'lessons' %}active{% endif %}">
+               Lessons
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'vocabulary' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'vocabulary' %}active{% endif %}">
+               Vocabulary
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'calendar' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'calendar' %}active{% endif %}">
+               Calendar
+            </a>
+        </li>
+
+        <li>
+            <a href="{% url 'profile' %}"
+               class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+               Profile
+            </a>
+        </li>
+    </ul>
+
+    <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+</nav>
+
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+
+<script>
+function toggleMenu() {
+    document.querySelector('.nav-links').classList.toggle('show');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-wrapper d-flex flex-column min-vh-100">
+
+    <div class="container-fluid flex-grow-1 p-4">
+
+        <h1 class="text-center mb-4 fw-bold">Welcome Back 👋</h1>
+
+        <div class="cards">
+
+            <!-- Weekly Goal -->
+            <div class="card custom-card">
+                <h3>🎯 Weekly Goal</h3>
+                <p>Learn {{ weekly_goal }} new words</p>
+                <div class="progress-bar">
+                    <div class="progress" style="width: {{ progress_percent }}%;"></div>
+                </div>
+                <small>{{ weekly_words }} / {{ weekly_goal }} words completed ({{ progress_percent }}%)</small>
+            </div>
+
+            <!-- Next Lesson -->
+            <div class="card custom-card">
+                <h3>📅 Next Lesson</h3>
+                {% if next_lesson %}
+                    <p>{{ next_lesson.title }} — {{ next_lesson.date }} {{ next_lesson.time }}</p>
+                {% else %}
+                    <p>No upcoming lessons</p>
+                {% endif %}
+            </div>
+
+            <!-- Vocabulary -->
+            <div class="card custom-card">
+                <h3>📚 Vocabulary</h3>
+                <p>{{ total_words }} total words learned</p>
+                <p>⭐ Level {{ level }}</p>
+            </div>
+
+            <!-- Streak -->
+            <div class="card custom-card">
+                <h3>🔥 Streak</h3>
+                <p>{{ streak }} lessons completed</p>
+                <p>XP: {{ xp }}</p>
+            </div>
+
+            <!-- Learning Stats -->
+            <div class="card custom-card">
+                <h3>📊 Learning Statistics</h3>
+                <p>Study time today: <strong>{{ study_time_today }}</strong></p>
+                <p>This week: <strong>{{ study_time_week }}</strong></p>
+                <p>Lessons completed: <strong>{{ lessons_completed }}</strong></p>
+            </div>
+
+            <!-- Recent Words -->
+            <div class="card custom-card">
+                <h3>📖 Recently Learned Words</h3>
+                <ul class="words-list">
+                    {% for word in recent_words %}
+                        <li>{{ word.english }} — {{ word.russian }}</li>
+                    {% empty %}
+                        <li>No words yet</li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<style>
+.page-wrapper {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.custom-card {
+    background-color: #1a1a1a;
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid #2a2a2a;
+    transition: 0.3s ease;
+}
+
+.custom-card:hover {
+    background-color: #222;
+    transform: translateY(-4px);
+}
+
+.progress-bar {
+    background-color: #2a2a2a;
+    height: 8px;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.progress {
+    background: linear-gradient(90deg, #0d6efd, #4e73ff);
+    height: 100%;
+    border-radius: 10px;
+}
+
+.highlight-card {
+    border: 1px solid #0d6efd;
+    box-shadow: 0 0 15px rgba(13,110,253,0.2);
+}
+
+.challenge-list,
+.words-list {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.challenge-list li {
+    margin-bottom: 5px;
+}
+
+.btn-start {
+    background: linear-gradient(45deg, #0d6efd, #4e73ff);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-start:hover {
+    transform: scale(1.05);
+}
+</style>
+
+{% endblock %}
+

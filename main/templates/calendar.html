@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="full-calendar">
+
+    <!-- Навигация -->
+    <div class="calendar-header">
+        <a href="{% url 'calendar_by_month' prev_year month %}">« Previous Year</a>
+        <a href="{% url 'calendar_by_month' prev_month_year prev_month %}">‹ Previous Month</a>
+
+        <div class="month-year">
+            <span class="month">{{ month_name }}</span>
+            <span class="year">{{ year }}</span>
+        </div>
+
+        <a href="{% url 'calendar_by_month' next_month_year next_month %}">Next Month ›</a>
+        <a href="{% url 'calendar_by_month' next_year month %}">Next Year »</a>
+
+        <!-- Ссылка на текущий месяц -->
+        <a href="{% url 'calendar' %}">Current Month</a>
+    </div>
+
+    <!-- Сетка календаря -->
+    <div class="calendar-grid">
+
+        <!-- Дни недели -->
+        <div class="day-name">Mon</div>
+        <div class="day-name">Tue</div>
+        <div class="day-name">Wed</div>
+        <div class="day-name">Thu</div>
+        <div class="day-name">Fri</div>
+        <div class="day-name">Sat</div>
+        <div class="day-name">Sun</div>
+
+        <!-- Пустые ячейки в начале месяца -->
+        {% for empty in empty_start %}
+            <div class="day empty"></div>
+        {% endfor %}
+
+        <!-- Дни месяца -->
+        {% for day in days_in_month %}
+            <div class="day
+                {% if day == today_day and month == today_month and year == today_year %} today{% endif %}
+                {% if day in lessons_days %} lesson-day{% endif %}">
+
+                <div class="date-number">{{ day }}</div>
+
+                {% for lesson in lessons %}
+                    {% if lesson.date.day == day %}
+                        <div class="lesson-item">
+                            {{ lesson.title }}
+                            <div class="lesson-time">{{ lesson.time }}</div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+        {% endfor %}
+
+    </div>
+</div>
+{% endblock %}

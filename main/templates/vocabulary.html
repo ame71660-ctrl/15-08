@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="vocab-container">
+
+    <h1>📘 My Vocabulary</h1>
+
+    <div class="input-row">
+        <input type="text" id="english" placeholder="English word" required>
+        <input type="text" id="russian" placeholder="Russian translation" required>
+        <input type="text" id="transcription" placeholder="Transcription" required>
+        <button id="addWordBtn">+ Add Word</button>
+    </div>
+
+    <input type="text" id="searchInput" placeholder="Search words..." class="search-input">
+
+    <div id="cardsContainer" class="cards-container">
+
+        <div class="card">
+            <div class="card-emoji">📚</div>
+
+            <div class="card-text">
+                <p class="english">hello</p>
+                <p class="russian">привет</p>
+                <p class="transcription">həˈloʊ</p>
+            </div>
+
+            <button class="delete-btn">✖</button>
+        </div>
+
+        <div class="card">
+            <div class="card-emoji">📚</div>
+
+            <div class="card-text">
+                <p class="english">goodbye</p>
+                <p class="russian">до свидания</p>
+                <p class="transcription">gʊdˈbaɪ</p>
+            </div>
+
+            <button class="delete-btn">✖</button>
+        </div>
+
+    </div>
+</div>
+
+<style>
+
+html, body {
+    height: 100%;
+    margin: 0;
+    background-color: #1e1e2f;
+    color: #f0f0f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.vocab-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #2a2a3a;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+}
+
+.vocab-container h1 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 32px;
+}
+
+.input-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.input-row input {
+    flex: 1 1 28%;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: none;
+    background-color: #3c3c4f;
+    color: #f0f0f0;
+    font-size: 16px;
+}
+
+.input-row button {
+    padding: 12px 25px;
+    border-radius: 15px;
+    border: none;
+    background-color: #3c3c4f;
+    font-weight: bold;
+    color: #f0f0f0;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.input-row button:hover {
+    background-color: #505060;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 12px;
+    border: none;
+    margin-bottom: 25px;
+    background-color: #3c3c4f;
+    color: #f0f0f0;
+    font-size: 16px;
+}
+
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.card {
+    background-color: #3a3a4f;
+    padding: 20px;
+    border-radius: 15px;
+    width: 200px;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.7);
+}
+
+.card-emoji {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    font-size: 20px;
+}
+
+.card-text p {
+    margin: 5px 0;
+}
+
+.english {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.russian {
+    font-size: 16px;
+    color: #d0d0d0;
+}
+
+.transcription {
+    font-size: 14px;
+    color: #b0b0b0;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border: none;
+    background-color: #555;
+    color: #f0f0f0;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: #777;
+}
+
+</style>
+
+<script>
+
+const addBtn = document.getElementById('addWordBtn');
+const cardsContainer = document.getElementById('cardsContainer');
+const searchInput = document.getElementById('searchInput');
+
+addBtn.addEventListener('click', () => {
+    const eng = document.getElementById('english').value.trim();
+    const rus = document.getElementById('russian').value.trim();
+    const trans = document.getElementById('transcription').value.trim();
+
+    if(eng && rus && trans){
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        card.innerHTML = `
+            <div class="card-emoji">📚</div>
+
+            <div class="card-text">
+                <p class="english">${eng}</p>
+                <p class="russian">${rus}</p>
+                <p class="transcription">${trans}</p>
+            </div>
+
+            <button class="delete-btn">✖</button>
+        `;
+
+        cardsContainer.appendChild(card);
+
+        document.getElementById('english').value = '';
+        document.getElementById('russian').value = '';
+        document.getElementById('transcription').value = '';
+
+        attachDelete(card.querySelector('.delete-btn'));
+    }
+});
+
+function attachDelete(btn){
+    btn.addEventListener('click', () => {
+        btn.parentElement.remove();
+    });
+}
+
+document.querySelectorAll('.delete-btn').forEach(attachDelete);
+
+searchInput.addEventListener('input', () => {
+    const filter = searchInput.value.toLowerCase();
+    document.querySelectorAll('.card').forEach(card => {
+        const eng = card.querySelector('.english').textContent.toLowerCase();
+        const rus = card.querySelector('.russian').textContent.toLowerCase();
+        const trans = card.querySelector('.transcription').textContent.toLowerCase();
+        card.style.display = (eng.includes(filter) || rus.includes(filter) || trans.includes(filter)) ? 'block' : 'none';
+    });
+});
+
+</script>
+
+{% endblock %}
+
+
+
